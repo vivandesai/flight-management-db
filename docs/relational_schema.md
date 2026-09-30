@@ -65,7 +65,7 @@ passport_no
 **flight_id**,
 departure_time,
 arrival_time,
-status,
+flight_status,
 airline_id,
 aircraft_id,
 departure_airport_id,
@@ -103,7 +103,7 @@ flight_id
 **BAGGAGE**(
 **booking_id**,
 **baggage_no**,
-weight
+baggage_weight
 )
 
 - Composite Primary Key: (`booking_id`, `baggage_no`)
