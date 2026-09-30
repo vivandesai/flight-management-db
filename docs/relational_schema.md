@@ -5,7 +5,7 @@
 **AIRLINE**(
 **airline_id**,
 code,
-name
+airline_name
 )
 
 - Primary Key: `airline_id`
@@ -34,7 +34,7 @@ airline_id
 **AIRPORT**(
 **airport_id**,
 airport_code,
-name,
+airport_name,
 city
 )
 
@@ -47,7 +47,7 @@ city
 
 **PASSENGER**(
 **passenger_id**,
-name,
+passenger_name,
 dob,
 phone,
 email,
