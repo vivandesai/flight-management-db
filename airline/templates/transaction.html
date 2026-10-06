@@ -1,0 +1,10 @@
+{% extends 'base.html' %}{% from 'macros.html' import sql_panel, demo_result %}{% block content %}
+<a class="back-link" href="{{ url_for('database_demos') }}">← Database demonstrations</a><div class="page-heading"><div><p class="eyebrow">ORIGINAL TRANSACTION {{ demo.id }}</p><h1>{{ demo.title }}</h1><p>Executes the supplied SQL with its original sample values.</p></div></div>
+<div class="alert alert-warning">This example may permanently change data. Existing IDs, seats, passport numbers and dates are used exactly as written. Repeated runs can fail on duplicates or changed data.</div>
+{% if demo.id == 3 %}<div class="alert alert-info">Flight 11 is cancelled before START TRANSACTION. That cancellation and its status audit persist even when the attempted booking is rejected and rolled back. The runner explicitly rolls back on errors.</div>{% endif %}
+{% if demo.id == 7 %}<div class="alert alert-info">The original first flight departs on 1 November 2026. MySQL will reject this example once that departure is no longer in the future.</div>{% endif %}
+{% if demo.id == 9 %}<div class="alert alert-info">The executed SQL updates two valid email addresses and commits both. It does not include an invalid-email attempt or a rollback to its savepoint, despite the source comments.</div>{% endif %}
+<details class="sql-panel" open><summary>Review original SQL <span>{{ demo.source }}:{{ demo.line }}</span></summary><pre><code>{{ demo.sql }}</code></pre></details>
+<section class="panel mt-4"><div class="panel-body"><form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><div class="form-check mb-3"><input class="form-check-input" type="checkbox" id="confirmed" name="confirmed" value="yes" required><label class="form-check-label" for="confirmed">I reviewed the SQL and accept its changes to this database.</label></div><button class="btn btn-primary">Run original transaction {{ demo.id }}</button></form></div></section>
+{{ demo_result(result) }}
+{% endblock %}

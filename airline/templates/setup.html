@@ -1,0 +1,5 @@
+{% extends 'base.html' %}{% block content %}
+<div class="page-heading"><div><p class="eyebrow">CONNECTION & SETUP</p><h1>{{ title }}</h1><p>The app needs the original MySQL database to show live results.</p></div></div>
+<section class="panel form-panel"><div class="panel-body">{% if error %}<div class="alert alert-warning" role="alert">{{ error }}</div>{% endif %}{% if missing %}<h2>Missing database objects</h2><ul>{% for name in missing %}<li>{{ name }}</li>{% endfor %}</ul>{% endif %}
+<ol><li>Start your MySQL server.</li><li>Copy <code>.env.example</code> to <code>.env</code> and set your local connection details.</li><li>For a new database only, run <code>python -m flask --app run init-db --fresh</code>.</li></ol><p>For an existing database, import only missing original scripts through your MySQL client. The app never initializes, resets or reseeds on startup. See the repository's setup instructions for the exact script order.</p><a class="btn btn-primary" href="{{ url_for('overview') }}">Retry connection</a></div></section>
+{% endblock %}

@@ -1,5 +1,27 @@
 # ✈️ Flight Management System
 
+## Run the airline management interface
+
+The repository now includes a simple **Flask + Jinja + Bootstrap** interface for airline staff: all 54 original report queries, management forms, 10 transaction examples, 12 trigger demonstrations and the database audit logs. The original files in `sql/` are unchanged.
+
+See **[setup and presentation walkthrough](docs/interface.md)** for Windows installation, MySQL connection settings and startup instructions. See **[query coverage](docs/query-coverage.md)** for the mapping from every original query to its screen.
+
+Quick start after installing Python 3.10+ and MySQL 8.4:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+Copy-Item .env.example .env
+# Edit .env with your own MySQL credentials.
+# For a NEW database only (skip if FlightManagement already exists):
+.\.venv\Scripts\python.exe -m flask --app run init-db --fresh
+.\.venv\Scripts\python.exe run.py
+```
+
+Open **http://127.0.0.1:5000**. The interface runs locally without Node.js, a frontend build, or internet access after installation. No database setup runs automatically.
+
+---
+
 A Database Management System (DBMS) mini-project for managing airlines, aircraft, airports, flights, passengers, bookings, and baggage using MySQL.
 
 The project demonstrates the design and implementation of a relational database along with SQL queries, transactions, triggers, and database constraints.
@@ -130,3 +152,4 @@ The primary key is:
 
 ```text
 (booking_id, baggage_no)
+```

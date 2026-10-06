@@ -1,0 +1,5 @@
+{% extends 'base.html' %}{% from 'macros.html' import table %}{% block content %}
+<div class="page-heading"><div><p class="eyebrow">DATABASE RECORDS</p><h1>{{ title }}</h1><p>Browse the original entities and trigger-generated audit tables.</p></div></div>
+<nav class="entity-tabs" aria-label="Database tables">{% for name in entities %}<a class="{{ 'selected' if name == entity }}" href="{{ url_for('records',entity=name) }}">{{ name|heading }}</a>{% endfor %}</nav>
+<section class="panel"><div class="panel-heading"><h2>{{ entity }}</h2><span class="count-badge">{{ rows|length }} {{ 'record' if rows|length == 1 else 'records' }}</span></div>{{ table(rows) }}</section>
+{% endblock %}

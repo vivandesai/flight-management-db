@@ -1,0 +1,4 @@
+{% extends 'base.html' %}{% from 'macros.html' import table %}{% block content %}
+<div class="page-heading"><div><p class="eyebrow">REVIEW BEFORE SAVING</p><h1>{{ title }}</h1><p>{{ action.description }}</p></div></div>
+<section class="panel form-panel"><div class="panel-body">{{ table(impact) }}<p class="mt-4">This removes all bookings and their baggage for this flight. The cancellation and status audit records remain. Counts may change if another operation occurs before confirmation.</p><form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% for key, value in values.items() if key not in ['csrf_token','confirmed'] %}<input type="hidden" name="{{ key }}" value="{{ value }}">{% endfor %}<input type="hidden" name="confirmed" value="yes"><button class="btn btn-danger">Confirm cancellation</button> <a class="btn btn-outline-secondary" href="{{ url_for('action_list') }}">Go back</a></form></div></section>
+{% endblock %}

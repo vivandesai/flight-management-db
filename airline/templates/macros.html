@@ -1,0 +1,42 @@
+{% macro table(rows, empty='No matching records. Try another selection or check the data in your database.') %}
+{% if rows %}
+<div class="table-responsive"><table class="table result-table mb-0"><thead><tr>{% for key in rows[0] %}<th scope="col">{{ key|heading }}</th>{% endfor %}</tr></thead>
+<tbody>{% for row in rows %}<tr>{% for key, value in row.items() %}<td>{{ value|cell(key) }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>
+{% else %}<div class="empty-state"><span aria-hidden="true">∅</span><h3>No records to show</h3><p>{{ empty }}</p></div>{% endif %}
+{% endmacro %}
+
+{% macro fields(specs, choices, values) %}
+<div class="row g-3">
+{% for f in specs %}
+<div class="col-md-6"><label for="{{ f.name }}" class="form-label">{{ f.label }}{% if f.required %}<span class="required" aria-hidden="true"> *</span>{% endif %}</label>
+{% if f.kind in choices %}
+<select id="{{ f.name }}" name="{{ f.name }}" class="form-select" {% if f.required %}required{% endif %}>
+<option value="">Select {{ f.label|lower }}</option>{% for value, label in choices[f.kind] %}<option value="{{ value }}" {% if values.get(f.name, '')|string == value|string %}selected{% endif %}>{{ label }}</option>{% endfor %}
+</select>
+{% else %}
+<input id="{{ f.name }}" name="{{ f.name }}" class="form-control" type="{{ 'number' if f.kind in ['money','weight','integer'] else f.kind }}" value="{{ values.get(f.name, '') }}" {% if f.required %}required{% endif %} {% if f.limit %}maxlength="{{ f.limit }}"{% endif %} {% if f.kind in ['money','weight'] %}step="0.01"{% elif f.kind == 'integer' %}step="1" min="1"{% endif %}>
+{% endif %}</div>
+{% endfor %}
+</div>
+{% endmacro %}
+
+{% macro sql_panel(sql, source, line) %}
+<details class="sql-panel"><summary>View SQL <span>{{ source }}:{{ line }}</span></summary><pre><code>{{ sql }}</code></pre></details>
+{% endmacro %}
+
+{% macro demo_result(result) %}
+{% if result %}
+<section class="panel mt-4"><div class="panel-heading"><h2>Execution outcome</h2></div><div class="panel-body">
+<div class="alert {{ 'alert-warning' if result.error else 'alert-success' }}" role="status">{{ result.outcome }}</div>
+{% if result.error %}<div class="database-error">{{ result.error }}</div>{% endif %}
+{% if result.fixture_steps is defined %}<details class="mb-3"><summary>Temporary fixture setup ({{ result.fixture_steps|length }} statements)</summary>{% for step in result.fixture_steps %}<pre>{{ step.sql }}
+Parameters: {{ step.params }}
+{{ step.state }} · {{ step.affected }} affected</pre>{% endfor %}</details>{% endif %}
+{% for step in result.steps %}<details class="step" {% if step.state == 'Rejected by MySQL' or step.rows %}open{% endif %}><summary>Step {{ loop.index }} · {{ step.state }} · {{ step.affected }} {{ 'row(s)' if step.rows else 'affected' }}</summary><pre>{{ step.sql }}{% if step.params is defined %}
+Parameters: {{ step.params }}{% endif %}</pre>{% if step.rows %}{{ table(step.rows) }}{% endif %}</details>{% endfor %}
+</div></section>
+<section class="panel mt-4"><div class="panel-heading"><h2>{{ 'Changes observed before rollback' if result.restored is defined else 'Persistent database changes' }}</h2></div><div class="panel-body">
+{% for change in result.changes %}<details class="step"><summary>{{ change.table }} · {{ change.before|length }} → {{ change.after|length }} records</summary><h3 class="mt-3">Before</h3>{{ table(change.before) }}<h3 class="mt-3">After</h3>{{ table(change.after) }}</details>{% else %}<p class="mb-0 text-secondary">No stored rows changed.</p>{% endfor %}
+</div></section>
+{% endif %}
+{% endmacro %}

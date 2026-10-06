@@ -1,0 +1,5 @@
+{% extends 'base.html' %}{% from 'macros.html' import sql_panel, demo_result %}{% block content %}
+<a class="back-link" href="{{ url_for('database_demos') }}">← Database demonstrations</a><div class="page-heading"><div><p class="eyebrow">TRIGGER DEMONSTRATION</p><h1>{{ title }}</h1><p>{{ description }}</p></div></div>
+<section class="panel"><div class="panel-body"><p>Uses new temporary records inside a transaction. Inspect the actual MySQL response and audit rows before the runner rolls back. Original stored rows are preserved; auto-increment IDs may advance.</p><form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-primary">Run reversible demonstration ↗</button></form></div></section>
+{{ demo_result(result) }}{{ sql_panel(trigger.sql, trigger.source, trigger.line) }}
+{% endblock %}

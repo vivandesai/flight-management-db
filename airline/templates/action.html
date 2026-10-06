@@ -1,0 +1,6 @@
+{% extends 'base.html' %}{% from 'macros.html' import fields as render_fields %}{% block content %}
+<a class="back-link" href="{{ url_for('action_list') }}">← Management actions</a><div class="page-heading"><div><p class="eyebrow">MANAGEMENT FORM</p><h1>{{ title }}</h1><p>{{ action.description }}</p></div></div>
+{% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
+<section class="panel form-panel"><div class="panel-body"><form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{{ render_fields(fields, choices, values) }}<div class="form-footer"><small>Required fields are marked *. Dates use the database's local wall-clock time.</small><button class="btn {{ 'btn-danger' if action_id == 'cancel' else 'btn-primary' }}">{{ 'Review cancellation' if action_id == 'cancel' else title }}</button></div></form></div></section>
+<p class="form-note">Changes are saved only if the complete management transaction succeeds. MySQL constraints and triggers stay active.</p>
+{% endblock %}

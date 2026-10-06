@@ -1,0 +1,4 @@
+{% extends 'base.html' %}{% block content %}
+<div class="page-heading"><div><p class="eyebrow">DAILY OPERATIONS</p><h1>Management actions</h1><p>Simple forms for bookings, passengers, baggage and flight operations.</p></div></div>
+<div class="report-grid">{% for id, action in actions.items() %}<a class="report-card" href="{{ url_for('action_detail',action_id=id) }}"><div class="report-card-top"><span class="tag">{{ 'Cancellation' if id == 'cancel' else 'Management' }}</span><span aria-hidden="true">↗</span></div><h2>{{ action.title }}</h2><p>{{ action.description }}</p><div class="report-card-bottom"><small>Open form</small><span aria-hidden="true">＋</span></div></a>{% endfor %}</div>
+{% endblock %}

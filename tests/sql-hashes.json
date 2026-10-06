@@ -1,0 +1,10 @@
+{
+  "sql/01_create_database.sql": "19fc9d04c4e8dfbd0a6e4b79e934f8ef6cb9885081092b373029f5e697f1f434",
+  "sql/02_create_tables.sql": "7741f913b8f635d27f8e42ccfd1412766bf30b47303a636660c4f74fca1f908a",
+  "sql/03_insert_data.sql": "400443d9cb9c7b41411091e26ebe91bea9a709cb084a150a317652ada3099b0e",
+  "sql/queries/01_joins.sql": "e8a1d57a6a9f4aa84e24dfd1aa81160776ea975713f46372f78e5e5d13f42a13",
+  "sql/queries/02_aggregates.sql": "bb3e488f495ec805efb0ba361a102f94fe93846a0687f1643a6fc184d49e576b",
+  "sql/queries/03_subqueries.sql": "1dde2d044a9ce645fc4d4c4dfd79deab9725ae1f296f74c7463158b1d7cae853",
+  "sql/transactions/01_transactions.sql": "5539c58c71ed732683f460b70d0719117da15ed01613bafe983b5e59b2e5ed5d",
+  "sql/triggers/01_triggers.sql": "5b4e907a6515e8ca30d441125e8e6e83b4fe931ed77ed8d2877ad66ad8ed4882"
+}
