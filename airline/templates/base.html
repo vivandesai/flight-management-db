@@ -1,7 +1,10 @@
+{% from 'icons.html' import icon %}
+{% set active_category = report.category if report is defined else request.args.get('category') %}
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#242521">
   <title>{{ title }} · Flight Management</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
@@ -9,28 +12,28 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <aside class="sidebar">
-    <a class="brand" href="{{ url_for('overview') }}"><span class="brand-icon" aria-hidden="true">↗</span><span>FLIGHT MANAGEMENT<small>Airline operations</small></span></a>
-    <p class="nav-label">WORKSPACE</p>
+    <a class="brand" href="{{ url_for('overview') }}"><span class="brand-icon">{{ icon('plane') }}</span><span>Flight management<small>OPERATIONS CONSOLE</small></span></a>
+    <p class="nav-label">YOUR WORKSPACE</p>
     <nav aria-label="Main navigation">
-      <a class="nav-item {{ 'active' if request.endpoint == 'overview' }}" href="{{ url_for('overview') }}"><span aria-hidden="true">▦</span>Overview</a>
-      {% for name in ['Flights', 'Fleet & airports', 'Passengers', 'Bookings', 'Baggage', 'Revenue'] %}
-      <a class="nav-item {{ 'active' if request.args.get('category') == name }}" href="{{ url_for('report_list', category=name) }}"><span aria-hidden="true">{{ ['↗','◇','○','▤','□','◷'][loop.index0] }}</span>{{ name }}</a>
+      <a class="nav-item {{ 'active' if request.endpoint == 'overview' }}" href="{{ url_for('overview') }}">{{ icon('grid') }}<span>Overview</span></a>
+      {% for name, glyph in [('Flights','plane'), ('Fleet & airports','fleet'), ('Passengers','users'), ('Bookings','ticket'), ('Baggage','baggage'), ('Revenue','chart')] %}
+      <a class="nav-item {{ 'active' if active_category == name }}" href="{{ url_for('report_list', category=name) }}">{{ icon(glyph) }}<span>{{ name }}</span></a>
       {% endfor %}
-      <p class="nav-label mt-4">TOOLS</p>
-      <a class="nav-item {{ 'active' if request.endpoint in ['action_list','action_detail'] }}" href="{{ url_for('action_list') }}"><span aria-hidden="true">＋</span>Management actions</a>
-      <a class="nav-item {{ 'active' if request.endpoint == 'report_list' and not request.args.get('category') }}" href="{{ url_for('report_list') }}"><span aria-hidden="true">≡</span>All 54 reports</a>
-      <a class="nav-item {{ 'active' if request.endpoint in ['database_demos','transaction_demo','trigger_demo'] }}" href="{{ url_for('database_demos') }}"><span aria-hidden="true">⌘</span>Database demos</a>
-      <a class="nav-item {{ 'active' if request.endpoint == 'records' }}" href="{{ url_for('records', entity='Airline') }}"><span aria-hidden="true">▥</span>Browse records</a>
+      <p class="nav-label tools-label">MANAGE & EXPLORE</p>
+      <a class="nav-item {{ 'active' if request.endpoint in ['action_list','action_detail'] }}" href="{{ url_for('action_list') }}">{{ icon('plus') }}<span>Management actions</span></a>
+      <a class="nav-item {{ 'active' if request.endpoint in ['report_list','report_detail'] and not active_category }}" href="{{ url_for('report_list') }}">{{ icon('reports') }}<span>All 54 reports</span><small class="nav-count" aria-hidden="true">54</small></a>
+      <a class="nav-item {{ 'active' if request.endpoint in ['database_demos','transaction_demo','trigger_demo'] }}" href="{{ url_for('database_demos') }}">{{ icon('code') }}<span>Database demos</span></a>
+      <a class="nav-item {{ 'active' if request.endpoint == 'records' }}" href="{{ url_for('records', entity='Airline') }}">{{ icon('database') }}<span>Browse records</span></a>
     </nav>
-    <div class="sidebar-note"><span class="status-dot"></span> Local management workspace<small>Powered by your MySQL database</small></div>
+    <div class="sidebar-note"><div class="sidebar-note-icon">{{ icon('globe') }}</div><div>Your operations hub<small><span class="status-dot"></span> Local workspace</small></div></div>
   </aside>
   <div class="workspace">
-    <header class="topbar"><span>Operations / <strong>{{ title }}</strong></span><span class="local-badge">LOCAL WORKSPACE</span></header>
+    <header class="topbar"><div class="breadcrumbs"><span>Workspace</span><span class="breadcrumb-divider">/</span><strong>{{ title }}</strong></div><div class="topbar-tools"><a class="search-shortcut" aria-label="Find a report" href="{{ url_for('report_list') }}">{{ icon('search') }}<span>Find a report</span></a><span class="workspace-avatar" aria-label="Airline management">FM</span></div></header>
     <main id="main" class="content">
       {% for category, message in get_flashed_messages(with_categories=true) %}<div class="alert alert-{{ category }}" role="status">{{ message }}</div>{% endfor %}
       {% block content %}{% endblock %}
     </main>
-    <footer>Flight Management · DBMS project <span>SQL remains the source of truth.</span></footer>
+    <footer><span>Flight management <span class="footer-dot">·</span> Operations made clearer</span><a href="{{ url_for('database_demos') }}">Explore the database {{ icon('arrow') }}</a></footer>
   </div>
   <script src="{{ url_for('static', filename='app.js') }}" defer></script>
 </body>

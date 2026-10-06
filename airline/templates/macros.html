@@ -1,8 +1,9 @@
+{% from 'icons.html' import icon %}
 {% macro table(rows, empty='No matching records. Try another selection or check the data in your database.') %}
 {% if rows %}
 <div class="table-responsive"><table class="table result-table mb-0"><thead><tr>{% for key in rows[0] %}<th scope="col">{{ key|heading }}</th>{% endfor %}</tr></thead>
-<tbody>{% for row in rows %}<tr>{% for key, value in row.items() %}<td>{{ value|cell(key) }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>
-{% else %}<div class="empty-state"><span aria-hidden="true">∅</span><h3>No records to show</h3><p>{{ empty }}</p></div>{% endif %}
+<tbody>{% for row in rows %}<tr>{% for key, value in row.items() %}<td {% if key.endswith('_id') %}class="identifier-cell"{% endif %}>{% if key == 'flight_status' and value %}<span class="flight-status status-{{ value|lower }}">{{ value }}</span>{% else %}{{ value|cell(key) }}{% endif %}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>
+{% else %}<div class="empty-state"><span class="empty-icon">{{ icon('search') }}</span><h3>No records to show</h3><p>{{ empty }}</p></div>{% endif %}
 {% endmacro %}
 
 {% macro fields(specs, choices, values) %}
@@ -21,7 +22,7 @@
 {% endmacro %}
 
 {% macro sql_panel(sql, source, line) %}
-<details class="sql-panel"><summary>View SQL <span>{{ source }}:{{ line }}</span></summary><pre><code>{{ sql }}</code></pre></details>
+<details class="sql-panel"><summary>{{ icon('code') }} View SQL <span>{{ source }}:{{ line }}</span></summary><pre><code>{{ sql }}</code></pre></details>
 {% endmacro %}
 
 {% macro demo_result(result) %}

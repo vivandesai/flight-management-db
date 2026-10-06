@@ -1,14 +1,45 @@
-{% extends 'base.html' %}{% from 'macros.html' import table %}
+{% extends 'base.html' %}{% from 'icons.html' import icon %}
 {% block content %}
-<div class="page-heading"><div><p class="eyebrow">YOUR AIRLINE, AT A GLANCE</p><h1>Operations overview</h1><p>Flight activity, bookings and revenue from your database.</p></div><a class="btn btn-primary" href="{{ url_for('action_detail', action_id='book') }}">＋ Create booking</a></div>
+<section class="operations-hero">
+  <div class="hero-content"><p class="eyebrow"><span class="hero-dot"></span> AIRLINE OPERATIONS</p><h1>Every flight.<br>In focus.</h1><p>Your flights, your people, and the details<br>that keep everything moving.</p><a class="btn btn-hero" href="{{ url_for('action_detail', action_id='book') }}">{{ icon('plus') }} Create booking {{ icon('right') }}</a></div>
+  <div class="hero-art" aria-hidden="true">
+    <svg viewBox="0 0 500 290" fill="none">
+      <circle cx="286" cy="150" r="114" stroke="#f5ede1" stroke-opacity=".11"/><circle cx="286" cy="150" r="85" stroke="#f5ede1" stroke-opacity=".11"/><circle cx="286" cy="150" r="55" stroke="#f5ede1" stroke-opacity=".11"/>
+      <ellipse cx="286" cy="150" rx="114" ry="39" transform="rotate(-32 286 150)" stroke="#eda864" stroke-opacity=".3"/>
+      <path d="M70 224C175 246 182 69 302 107S388 210 460 65" stroke="#ed9963" stroke-width="2" stroke-dasharray="5 7"/>
+      <circle cx="70" cy="224" r="15" fill="#ed9963" fill-opacity=".10"/><circle cx="70" cy="224" r="5" fill="#ed9963"/><circle cx="460" cy="65" r="15" fill="#f2ce95" fill-opacity=".1"/><circle cx="460" cy="65" r="5" fill="#f2ce95"/>
+      <g transform="translate(239 81) rotate(23)"><rect width="80" height="80" rx="20" fill="#e68b50" fill-opacity=".13" stroke="#edb88f" stroke-opacity=".28"/><path d="m23 39 37-16-13 39-8-16-16-7Zm37-16L39 46" fill="#efb681" stroke="#ffe9d2" stroke-width="1.8" stroke-linejoin="round"/></g>
+      <path d="M147 48h30M162 33v30M395 250h14M402 243v14" stroke="#ecd8bc" stroke-opacity=".45" stroke-width="1.5"/><circle cx="418" cy="145" r="3" fill="#eb9e62" fill-opacity=".7"/><circle cx="146" cy="169" r="2" fill="#f0d6ad" fill-opacity=".5"/>
+    </svg>
+    <span class="hero-art-label">A connected network. One workspace.</span>
+  </div>
+  <span class="hero-corner-label">AIRLINE OPERATIONS / OVERVIEW</span>
+</section>
+
 <div class="stat-grid">
-{% for label, value, sub, link in [('Flights', counts.total_flights, 'Scheduled flight records', 'J4'), ('Bookings', counts.total_bookings, 'Recorded passenger bookings', 'A4'), ('Passengers', counts.total_passengers, 'Registered passengers', 'J7'), ('Booking revenue', revenue|cell, 'Total of recorded fares', 'A2')] %}
-<a class="stat-card" href="{{ url_for('report_detail', report_id=link) }}"><div>{{ label }} <span aria-hidden="true">↗</span></div><strong>{{ value }}</strong><small>{{ sub }}</small></a>
+{% for label, value, sub, link, glyph, tone in [('Flights', counts.total_flights, 'Across your network', 'J4','plane','orange'), ('Bookings', counts.total_bookings, 'Passenger reservations', 'A4','ticket','sand'), ('Passengers', counts.total_passengers, 'Registered travelers', 'J7','users','slate'), ('Booking revenue', revenue|cell, 'Total of recorded fares', 'A2','chart','dark')] %}
+<a class="stat-card stat-{{ tone }}" href="{{ url_for('report_detail', report_id=link) }}"><div class="stat-top"><span class="stat-icon">{{ icon(glyph) }}</span>{{ icon('arrow','stat-arrow') }}</div><p>{{ label }}</p><strong>{{ value }}</strong><small>{{ sub }}</small></a>
 {% endfor %}
 </div>
-<div class="overview-row"><section class="panel"><div class="panel-heading"><div><h2>Flight schedule</h2><p>Airlines, aircraft and routes</p></div><a href="{{ url_for('report_detail', report_id='J4') }}">Open report ↗</a></div>{{ table(schedule) }}</section></div>
-<div class="row g-4 mt-0"><div class="col-xl-7"><section class="panel h-100"><div class="panel-heading"><div><h2>Seat availability</h2><p>Booked seats against aircraft capacity</p></div><a href="{{ url_for('report_detail', report_id='A5') }}">View report ↗</a></div><div class="panel-body occupancy-grid">
-{% for row in occupancy %}<div class="occupancy-row"><div><strong>Flight {{ row.flight_id }}</strong><small>{{ row.airline_name }}</small></div><div class="occupancy-meter"><div class="progress" role="progressbar" aria-label="Flight {{ row.flight_id }} booked seats" aria-valuenow="{{ row.booked_seats }}" aria-valuemin="0" aria-valuemax="{{ row.total_seats }}"><div class="progress-bar" style="width:{{ [100, (row.booked_seats / row.total_seats * 100)]|min }}%"></div></div><small>{{ row.booked_seats }} / {{ row.total_seats }} seats</small></div><span>{{ row.available_seats }} available</span></div>{% else %}<p>No flights in the database.</p>{% endfor %}
-</div></section></div><div class="col-xl-5"><section class="panel mb-4"><div class="panel-heading"><div><h2>Most booked flights</h2><p>Includes all ties for first place</p></div></div>{{ table(popular) }}</section><section class="panel"><div class="panel-heading"><h2>Network & fleet</h2></div><div class="network-grid">{% for key, label, entity in [('total_airlines','Airlines','Airline'), ('total_aircraft','Aircraft','Aircraft'), ('total_airports','Airports','Airport'), ('total_baggage','Bags','Baggage')] %}<a href="{{ url_for('records',entity=entity) }}"><strong>{{ counts[key] }}</strong><small>{{ label }}</small></a>{% endfor %}</div></section></div></div>
-<div class="demo-callout"><div><p class="eyebrow">SEE THE DATABASE IN ACTION</p><h2>Transactions, triggers and audit trails</h2><p>Explore how MySQL protects records and keeps a history of changes.</p></div><a class="btn btn-outline-primary" href="{{ url_for('database_demos') }}">Open database demos ↗</a></div>
+
+<div class="dashboard-grid">
+  <section class="panel flight-board"><div class="panel-heading"><div><p class="eyebrow">FLIGHT OPERATIONS</p><h2>Flight board</h2></div><span class="count-badge">{{ schedule|length }} flights</span></div>
+    {% if schedule %}<div class="table-responsive"><table class="table board-table mb-0"><thead><tr><th scope="col">Flight / airline</th><th scope="col">Route</th><th scope="col">Departure</th><th scope="col">Status</th></tr></thead><tbody>
+    {% for row in schedule[:6] %}<tr><td><div class="flight-identity"><span class="airline-mark airline-tone-{{ loop.index0 % 4 }}">{{ icon('plane') }}</span><div><strong>Flight #{{ row.flight_id }}</strong><small>{{ row.airline_name }}</small></div></div></td><td><div class="route-display"><strong>{{ row.departure_airport }}</strong><span class="route-line">{{ icon('plane') }}</span><strong>{{ row.arrival_airport }}</strong></div><small class="aircraft-detail">{{ row.model }}</small></td><td><strong class="departure-clock">{{ row.departure_time.strftime('%H:%M') }}</strong><small class="date-detail">{{ row.departure_time.strftime('%d %b %Y') }}</small></td><td><span class="flight-status status-{{ row.flight_status|lower }}">{{ row.flight_status }}</span></td></tr>{% endfor %}
+    </tbody></table></div>{% else %}<div class="empty-state"><h3>No flights yet</h3><p>Your scheduled flights will appear here.</p></div>{% endif %}
+    <div class="panel-footer"><span>Showing {{ [6, schedule|length]|min }} of {{ schedule|length }} flights</span><a href="{{ url_for('report_detail', report_id='J4') }}">View full schedule {{ icon('right') }}</a></div>
+  </section>
+  <div class="dashboard-side">
+    <section class="fleet-card"><div class="fleet-card-heading"><div><p class="eyebrow">YOUR NETWORK</p><h2>Ready for takeoff.</h2></div>{{ icon('globe') }}</div><div class="fleet-feature"><strong>{{ counts.total_aircraft }}</strong><span>aircraft<br>in your fleet</span><div class="fleet-orbit" aria-hidden="true">{{ icon('plane') }}</div></div><div class="fleet-network"><a href="{{ url_for('records',entity='Airline') }}"><strong>{{ counts.total_airlines }}</strong><span>Airlines {{ icon('arrow') }}</span></a><a href="{{ url_for('records',entity='Airport') }}"><strong>{{ counts.total_airports }}</strong><span>Airports {{ icon('arrow') }}</span></a></div><a class="fleet-link" href="{{ url_for('records',entity='Aircraft') }}">Explore your fleet {{ icon('right') }}</a></section>
+    <section class="panel quick-panel"><div class="panel-heading"><h2>Quick actions</h2>{{ icon('spark') }}</div><div class="quick-actions">{% for id, label, glyph in [('schedule','Schedule a flight','plane'), ('register','Add a passenger','users'), ('baggage','Register baggage','baggage')] %}<a href="{{ url_for('action_detail',action_id=id) }}"><span>{{ icon(glyph) }}{{ label }}</span>{{ icon('arrow') }}</a>{% endfor %}</div></section>
+  </div>
+</div>
+
+<div class="dashboard-lower">
+  <section class="panel"><div class="panel-heading"><div><p class="eyebrow">CAPACITY AT A GLANCE</p><h2>Room to fly</h2></div><a href="{{ url_for('report_detail',report_id='A5') }}">Full report {{ icon('arrow') }}</a></div><div class="panel-body occupancy-grid">
+    {% for row in occupancy %}<div class="occupancy-row"><div><strong>Flight #{{ row.flight_id }}</strong><small>{{ row.airline_name }}</small></div><div class="occupancy-meter"><div class="progress" role="progressbar" aria-label="Flight {{ row.flight_id }} booked seats" aria-valuenow="{{ row.booked_seats }}" aria-valuemin="0" aria-valuemax="{{ row.total_seats }}"><div class="progress-bar" style="width:{{ [100, (row.booked_seats / row.total_seats * 100)]|min }}%"></div></div><small>{{ row.booked_seats }} / {{ row.total_seats }} booked</small></div><span>{{ row.available_seats }}<small>available</small></span></div>{% else %}<p>No flights in the database.</p>{% endfor %}
+  </div></section>
+  <section class="panel popular-panel"><div class="panel-heading"><div><p class="eyebrow">PASSENGER FAVORITES</p><h2>Most booked flights</h2></div>{{ icon('ticket') }}</div><div class="popular-flights">{% for row in popular %}<a href="{{ url_for('report_detail',report_id='U3',flight_id=row.flight_id,run=1) }}"><span class="popular-number">{{ '%02d'|format(row.flight_id) }}</span><div><strong>Flight #{{ row.flight_id }}</strong><small>{{ row.airline_name }}</small></div><span class="popular-count">{{ row.total_bookings }}<small>bookings</small></span></a>{% else %}<div class="empty-state"><p>No bookings yet.</p></div>{% endfor %}</div><div class="panel-footer"><span>All flights tied for first place</span><a href="{{ url_for('report_detail',report_id='A13') }}">Open report {{ icon('arrow') }}</a></div></section>
+</div>
+<div class="demo-callout"><span class="callout-icon">{{ icon('code') }}</span><div><p class="eyebrow">BEHIND EVERY SMOOTH OPERATION</p><h2>A database that does the heavy lifting.</h2><p>See transactions, triggers and audit trails in action.</p></div><a class="btn btn-outline-primary" href="{{ url_for('database_demos') }}">Explore database demos {{ icon('arrow') }}</a></div>
 {% endblock %}

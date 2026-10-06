@@ -30,3 +30,13 @@ Original repository baseline: `12d62b3fd57e0a4fa3cff16774d6ac585ff171f1`.
 All eight original SQL files have zero Git diff against that baseline. The content manifest in `tests/sql-hashes.json` verifies SHA-256 hashes, allowing only operating-system checkout line endings. No original statement, table, trigger, transaction, literal or sample date was edited.
 
 See [setup and test instructions](interface.md) for reproducing the checks on a separate disposable MySQL server.
+
+## Visual refresh
+
+The interface now uses charcoal, warm cream and burnt orange, with local SVG icons, a compact flight board, clearer status badges and consistent report cards and forms. Styling assets remain bundled locally.
+
+- Read-only rendering checks passed for **99 pages**, including all 54 reports with valid inputs, all management forms, transaction and trigger pages, and record views.
+- Browser checks covered report search, the Mumbai-to-Delhi flight filter, original SQL disclosure, booking form and database demonstrations.
+- Dashboard and booking form were inspected at desktop and mobile sizes; mobile page width matches client width and wide tables remain inside scroll containers.
+- Catalogue and original SQL hash checks passed. Python backend files and original SQL files have no changes in this refresh.
+- No database writes were made during this visual verification.
