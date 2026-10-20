@@ -20,6 +20,8 @@
       <a class="nav-item {{ 'active' if active_category == name }}" href="{{ url_for('report_list', category=name) }}">{{ icon(glyph) }}<span>{{ name }}</span></a>
       {% endfor %}
       <p class="nav-label tools-label">MANAGE & EXPLORE</p>
+      <a class="nav-item {{ 'active' if request.endpoint in ['admin.home','admin.records','admin.record_form'] }}" href="{{ url_for('admin.home') }}">{{ icon('database') }}<span>DBA panel</span></a>
+      <a class="nav-item {{ 'active' if request.endpoint in ['admin.view_list','admin.view_detail'] }}" href="{{ url_for('admin.view_list') }}">{{ icon('reports') }}<span>SQL views</span><small class="nav-count" aria-hidden="true">7</small></a>
       <a class="nav-item {{ 'active' if request.endpoint in ['action_list','action_detail'] }}" href="{{ url_for('action_list') }}">{{ icon('plus') }}<span>Management actions</span></a>
       <a class="nav-item {{ 'active' if request.endpoint in ['report_list','report_detail'] and not active_category }}" href="{{ url_for('report_list') }}">{{ icon('reports') }}<span>All 54 reports</span><small class="nav-count" aria-hidden="true">54</small></a>
       <a class="nav-item {{ 'active' if request.endpoint in ['database_demos','transaction_demo','trigger_demo'] }}" href="{{ url_for('database_demos') }}">{{ icon('code') }}<span>Database demos</span></a>

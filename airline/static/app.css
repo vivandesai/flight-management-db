@@ -12,6 +12,11 @@
   --bs-primary-rgb: 199, 92, 45;
 }
 * { box-sizing: border-box; }
+.record-actions { display: flex; gap: 18px; align-items: center; white-space: nowrap; }
+.record-actions a { font-size: 12px; font-weight: 600; }
+.delete-link { color: #a95145; }
+.deletion-confirm { display: flex; gap: 12px; align-items: flex-start; line-height: 1.7; }
+.deletion-confirm input { margin-top: 6px; accent-color: #a95145; }
 body { background: var(--canvas); color: var(--ink); font-family: "Segoe UI", system-ui, sans-serif; font-size: 14px; -webkit-font-smoothing: antialiased; }
 a { color: var(--accent); text-decoration: none; }
 a:hover { color: var(--accent-dark); }

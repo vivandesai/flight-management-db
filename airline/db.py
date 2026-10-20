@@ -78,6 +78,25 @@ def initialize(conn):
     for path in ("sql/01_create_database.sql", "sql/02_create_tables.sql", "sql/03_insert_data.sql",
                  "sql/triggers/01_triggers.sql"):
         execute_script(conn, path)
+    install_views(conn)
+
+
+def install_views(conn):
+    missing = setup_status(conn)
+    if missing:
+        raise ValueError("Install the original tables and triggers first. Missing: " + ", ".join(missing))
+    execute_script(conn, "sql/views/01_management_views.sql")
+
+
+@click.command("install-views")
+def install_views_command():
+    """Install or replace only the seven management views in the configured database."""
+    try:
+        with connection() as conn:
+            install_views(conn)
+    except (ValueError, mysql.connector.Error) as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo("Installed seven management views. Base tables and stored rows were not changed.")
 
 
 @click.command("init-db")
@@ -94,4 +113,4 @@ def init_db_command(fresh):
         raise click.ClickException(str(exc)) from exc
     finally:
         conn.close()
-    click.echo("Created FlightManagement using the four original scripts. Installed 12 triggers after seed data.")
+    click.echo("Created FlightManagement using the four original scripts, followed by seven views. Installed 12 triggers after seed data.")

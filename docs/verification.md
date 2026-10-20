@@ -1,5 +1,24 @@
 # Interface verification
 
+## DBA panel and seven views — 20 October 2026
+
+Verified against a newly provisioned, isolated Windows MySQL Community Server **8.4.13**, bound to `127.0.0.1:33317`, with the required disposable-server marker. No existing user database was used or reset.
+
+- Final complete regression run: **129 passed in 56.45 seconds**. The 98 existing checks still pass; 31 additional checks cover the new catalogues, DBA workflows and views.
+- All seven entity updates persist and preserve immutable relationships. Invalid dates/email, duplicate codes/passports/seats, invalid fares, baggage limits and capacity reductions are rejected without stored changes.
+- Concurrent edits from the same original snapshot produce exactly one successful commit; the other is rejected as stale. Tampered, cross-record, wrong-operation and expired row tokens are rejected.
+- Individual deletion succeeds for each of the seven entities after dependencies are removed separately. Referenced records remain blocked. Booking creation/cancellation audits survive deletion of their original booking.
+- Flight edits reject invalid timing and aircraft overlap; the original arrived-status lock and status-only edits to past flights work as intended.
+- All seven installed views execute with INVOKER security. Checks verify seed totals, zero-activity rows, one row per booking, correct revenue/baggage aggregates and immediate edit/deletion results.
+- Missing-view screens show setup instructions without creating objects or blocking original reports. Repeated `install-views` preserves base rows, including after a partial installation.
+- Browser verification at desktop 1366 × 900 and mobile 390 × 844 covered DBA lists, edit forms, blocked-deletion previews, view cards and view-definition disclosure. A browser-submitted airline edit appeared immediately in the airline-performance view. No browser warnings/errors were logged; mobile page width matched client width.
+- Dependency checks and Python compilation passed. All eight original SQL blobs and the existing hash manifest remain unchanged. The newer upstream README commit was incorporated before adding documentation.
+- The disposable database finished with the original seed: 29 bookings, fare total 271,300.00, and seven installed views. Temporary browser viewport overrides were reset.
+
+See [DBA and views setup and walkthrough](dba-and-views.md).
+
+## Original implementation — 7 October 2026
+
 Verified on 7 October 2026 using Python 3.13.15 and a separate Windows MySQL Community Server 8.4.9 instance bound to localhost on port 33317. The test server was created under the local temporary directory, outside the repository. The app itself requires only Python and an existing MySQL installation.
 
 ## Results

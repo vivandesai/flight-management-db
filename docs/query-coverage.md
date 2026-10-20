@@ -2,6 +2,8 @@
 
 All report text is loaded directly from the existing SQL files. IDs follow source order: J = joins, G = aggregates, U = user subqueries and A = admin subqueries. Similar reports remain separate.
 
+The seven additional MySQL views are a separate catalogue, not replacement reports. Their definitions are in [`sql/views/01_management_views.sql`](../sql/views/01_management_views.sql); the [DBA and views guide](dba-and-views.md) maps all seven scenarios and explains their original-query connections. DBA SELECT/UPDATE/DELETE templates are separately stored in [`sql/dba/01_entity_operations.sql`](../sql/dba/01_entity_operations.sql).
+
 | ID | Management report | Category | Inputs | Original source |
 | --- | --- | --- | --- | --- |
 | J1 | Flights by airline | Flights | None | [sql/queries/01_joins.sql:3](../sql/queries/01_joins.sql#L3) |

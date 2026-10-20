@@ -151,6 +151,10 @@ The built-in web portal runs locally on Flask & Waitress:
 - **Query Explorer**: Live execution of all 54 SQL queries categorized by domain.
 - **Interactive Transaction & Trigger Demos**: Visual execution displaying query output, affected rows, and rollback behavior.
 - **Database Logs**: Live inspection of `flight_status_log`, `booking_creation_log`, and `booking_cancellation_log`.
+- **DBA Panel**: Search all seven entities, edit selected details, and preview individual deletions with dependency blocking. IDs and relationships remain protected; audit tables stay read-only.
+- **Seven SQL Views**: Flight operations, occupancy, airline performance, passenger activity, booking manifest, booking baggage and airport traffic, with live results and visible CREATE VIEW definitions.
+
+The DBA panel remains a local, no-login project screen. New parameterized DBA statements and seven view definitions live in separate scripts; all eight original SQL files remain unchanged. See the [DBA and views guide](docs/dba-and-views.md).
 
 ---
 
@@ -250,7 +254,7 @@ APP_PORT=5000
 ### 4. Database Initialization
 
 #### Scenario A: Fresh Setup (Database does not exist yet)
-Run the automated initialization command to create the database, tables, sample records, and triggers:
+Run the explicit initialization command to create the database, tables, sample records, triggers, and seven management views:
 
 ```powershell
 .\.venv\Scripts\python.exe -m flask --app run init-db --fresh
@@ -263,6 +267,14 @@ If the database `FlightManagement` already exists, skip `init-db --fresh` (it re
 # In PowerShell:
 Get-Content sql\triggers\01_triggers.sql | mysql -u root -p FlightManagement
 ```
+
+For an existing database with its original tables and triggers, install only the new views:
+
+```powershell
+.\.venv\Scripts\python.exe -m flask --app run install-views
+```
+
+This command does not reseed or modify stored rows. Startup never installs views automatically. See [DBA and views setup](docs/dba-and-views.md) for privileges and rerunning a partial installation.
 
 ### 5. Run the Application
 Start the local web server:
@@ -295,6 +307,7 @@ To run automated checks against the query catalogue and test suite:
 ## 📖 Documentation Links
 
 - **[Setup & Presentation Walkthrough](docs/interface.md)**: Detailed step-by-step instructions for viva/presentation prep and user workflows.
+- **[DBA Panel & Seven SQL Views](docs/dba-and-views.md)**: Editable fields, deletion safeguards, view installation and presentation scenarios.
 - **[Query Coverage Matrix](docs/query-coverage.md)**: Line-by-line index mapping each SQL query to the interface screen.
 - **[Relational Schema Specification](docs/relational_schema.md)**: Mathematical schema notation and foreign key references.
 - **[Verification Guide](docs/verification.md)**: Operational verification steps and checklist.

@@ -49,6 +49,8 @@ This executes the four original files, without changing their contents, in this 
 3. `sql/03_insert_data.sql`
 4. `sql/triggers/01_triggers.sql`
 
+It then executes the new `sql/views/01_management_views.sql` to install seven management views. All four original setup files remain unchanged. The DBA statement-template file is never executed as an initialization batch.
+
 The seed runs before triggers because its fixed sample flight dates may be in the past. Connector/Python processes the trigger script's `DELIMITER` directives. The initialization account needs permission to create the database, tables and triggers. If initialization fails partway, the app does not drop the partially created database; inspect the reported error in your MySQL client.
 
 The initializer refuses to overwrite or reseed an existing `FlightManagement` database. It never runs the transaction examples as part of setup.
@@ -56,6 +58,8 @@ The initializer refuses to overwrite or reseed an existing `FlightManagement` da
 ### Existing database
 
 Set the connection details and skip initialization. All seven base tables, three audit tables and twelve triggers must be present. If only triggers/audit tables are missing, execute the **unchanged** `sql/triggers/01_triggers.sql` in your MySQL client. For other missing objects, inspect the database and import the relevant original setup scripts deliberately; do not rerun the seed over populated tables.
+
+To add only the seven new views to an existing database, run `.\.venv\Scripts\python.exe -m flask --app run install-views`. Missing views do not block staff reports or the DBA panel. See [DBA and views](dba-and-views.md) for privileges and installation details.
 
 The original trigger uses `BEFORE DELETE ON airline`, while the table is created as `Airline`. Windows MySQL's case-insensitive table handling supports this unchanged source. On a case-sensitive MySQL server it can fail. Use a case-insensitive server configuration for this project rather than editing the SQL. Runtime verification used MySQL 8.4 on Windows with `lower_case_table_names=1`.
 
@@ -74,6 +78,8 @@ Open **http://127.0.0.1:5000**. Waitress serves the app on localhost only. To us
 - **All 54 reports:** search by title, description, query ID or SQL technique. Similar queries remain separately accessible.
 - **Management actions:** registration, booking with optional baggage, transfer with actual baggage preservation, baggage registration, contact updates, status updates, flight cancellation, scheduling and airline onboarding.
 - **Browse records:** all seven entities and three audit tables, read-only.
+- **DBA panel:** search and edit selected fields across the seven entities, plus confirmed individual deletion when dependencies permit it. IDs and relationships stay read-only.
+- **SQL views:** seven separately installed MySQL views with live results and source definitions; these do not replace the 54 original reports.
 - **Database demos:** original transactions plus reversible trigger demonstrations.
 
 Reports needing inputs use dropdowns populated from MySQL. Dates are explicit selections, not rewritten sample values. The supplied route-search default of 1 October 2026 has no matching seed flight; use **Mumbai → Delhi, 5 October 2026** to demonstrate an existing match. Zero-result reports are expected for the initial sample data, including almost-full flights.
@@ -88,7 +94,7 @@ Transaction 3 cancels Flight 11 outside `START TRANSACTION`. That cancellation a
 
 **Trigger demos:** each creates its own temporary airline, aircraft, airports, passenger, flight and booking inside a transaction. It then exercises the selected trigger, shows changes and audit evidence, and rolls back all fixture and demo rows. MySQL auto-increment counters can still advance after a rollback. No existing stored rows are changed by these demos. Invalid input being rejected is a successful demonstration of the database rule.
 
-Management forms commit only complete workflows. If booking baggage fails, the booking and its audit row roll back too. If rebooking fails, the old booking and its actual baggage return. Contact updates reflect the original rules: email validation exists for passenger **inserts**, not updates; the application does not silently add a new database rule.
+Management forms commit only complete workflows. If booking baggage fails, the booking and its audit row roll back too. If rebooking fails, the old booking and its actual baggage return. The existing contact workflow retains its original behavior: email validation exists for passenger **inserts**, not updates. The new DBA editing screen explicitly checks birth date/email, fare, baggage and capacity rules for its updates without altering any original trigger or workflow. See [DBA and views](dba-and-views.md).
 
 ## Short presentation walkthrough
 

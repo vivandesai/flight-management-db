@@ -1,0 +1,14 @@
+{% extends 'base.html' %}{% from 'macros.html' import table, fields as render_fields, sql_panel %}
+{% block content %}
+<a class="back-link" href="{{ url_for('admin.records',entity=entity.name) }}">← {{ entity.name }} records</a>
+<div class="page-heading"><div><p class="eyebrow">DBA · {{ entity.name|upper }} #{{ key }}</p><h1>{{ title }}</h1><p>{{ 'Update selected details. IDs, relationships and booking dates are read-only.' if operation == 'edit' else 'Review this record and its dependencies. Only this one record will be deleted.' }}</p></div></div>
+{% if error %}<div class="alert alert-danger" role="alert">{{ error }} <a href="{{ url_for('admin.record_form',entity=entity.name,key=key,operation=operation) }}">Reload record</a></div>{% endif %}
+<section class="panel mb-4"><div class="panel-heading"><h2>Current database record</h2></div>{{ table([row]) }}</section>
+{% if operation == 'delete' %}
+<section class="panel mb-4"><div class="panel-heading"><h2>Deletion impact</h2></div>{{ table(dependencies) }}<div class="panel-body"><p class="mb-0">{% if has_dependencies %}Deletion is blocked. Referenced records must be handled individually through their own screens.{% else %}No dependent records found. MySQL constraints and triggers will be checked again when you confirm.{% endif %}</p>{% if entity.name == 'Booking' %}<p class="mt-3 mb-0">Deleting a booking creates a cancellation audit entry through the existing trigger.</p>{% endif %}</div></section>
+{% endif %}
+<form method="post" class="panel form-panel"><div class="panel-body"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="row_token" value="{{ token }}">
+{% if operation == 'edit' %}{{ render_fields(fields, choices, values) }}{% else %}<label class="deletion-confirm"><input type="checkbox" name="confirmed" value="yes" required {% if has_dependencies %}disabled{% endif %}> I confirm deletion of {{ entity.name }} {{ key }}. This action is permanent.</label>{% endif %}
+<div class="form-footer"><span>{{ 'The complete change commits together or rolls back on failure.' if operation == 'edit' else 'No child records or audit logs will be removed automatically.' }}</span><button class="btn {{ 'btn-primary' if operation == 'edit' else 'btn-danger' }}" {% if operation == 'delete' and has_dependencies %}disabled{% endif %}>{{ 'Save changes' if operation == 'edit' else 'Delete record' }}</button></div></div></form>
+{{ sql_panel(statement.sql,statement.source,statement.line) }}
+{% endblock %}

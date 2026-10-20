@@ -9,7 +9,8 @@ from flask_wtf.csrf import CSRFProtect, CSRFError
 import mysql.connector
 
 from .catalogue import ROOT, REPORTS, TRANSACTIONS, TRIGGERS, CATEGORIES
-from .db import connection, query, run_report, setup_status, init_db_command, TABLES
+from .db import connection, query, run_report, setup_status, init_db_command, install_views_command, TABLES
+from .admin_routes import admin
 from .demos import run_transaction, run_trigger, TRIGGER_LABELS
 from .workflows import ACTIONS, STATUSES, field, validate, execute_action
 
@@ -28,6 +29,8 @@ def create_app(test_config=None):
         app.config.update(test_config)
     CSRFProtect(app)
     app.cli.add_command(init_db_command)
+    app.cli.add_command(install_views_command)
+    app.register_blueprint(admin)
 
     @app.template_filter("cell")
     def cell(value, column=""):
