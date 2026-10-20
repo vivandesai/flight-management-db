@@ -1,5 +1,14 @@
 # Interface verification
 
+## Integrated view navigation — 21 October 2026
+
+- Full regression suite: **131 passed in 68.95 seconds**, against the isolated MySQL 8.4.13 test server.
+- All seven views appear in the same card grid and search as the 54 original reports, under their relevant business categories. All reports contains 61 entries; there is no SQL views sidebar item or separate listing page.
+- View details retain live SELECT results and source definitions, highlight the correct category, and link back to that category. Existing `/views` bookmarks redirect to All reports; all seven direct view URLs remain valid.
+- Tests check category membership, combined counts, all 61 link targets, V1–V7/database-name search, view-only results, empty searches, legacy navigation, and missing-view guidance without blocking original features.
+- Desktop 1366 × 900 and mobile 390 × 844 browser checks passed for category cards, opening a view, returning to its category and shared search. Mobile page width matches client width; temporary viewport overrides were reset.
+- No SQL file or hash-manifest changes were made. Hosting recommendations were researched from official provider documentation and recorded separately; no cloud deployment or account creation was performed.
+
 ## DBA panel and seven views — 20 October 2026
 
 Verified against a newly provisioned, isolated Windows MySQL Community Server **8.4.13**, bound to `127.0.0.1:33317`, with the required disposable-server marker. No existing user database was used or reset.

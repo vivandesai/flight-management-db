@@ -10,7 +10,7 @@ from airline.catalogue import ROOT
 from airline.db import connect, install_views, query
 from airline.dba import ENTITIES, STATEMENTS, dependencies, form_values, get_record, mutate, row_token
 from airline.demos import snapshot
-from airline.view_catalogue import VIEWS
+from airline.view_catalogue import VIEWS, select_views
 
 
 def test_new_sql_catalogues():
@@ -23,6 +23,19 @@ def test_new_sql_catalogues():
     for view in VIEWS.values():
         assert 'SQL SECURITY INVOKER' in view['sql']
         assert (ROOT / view['source']).read_text().splitlines()[view['line']-1].startswith('CREATE OR REPLACE')
+
+
+def test_view_category_and_search_catalogue():
+    expected = {'Flights': ['vw_flight_operations','vw_flight_occupancy'],
+                'Revenue': ['vw_airline_performance'], 'Passengers': ['vw_passenger_activity'],
+                'Bookings': ['vw_booking_manifest'], 'Baggage': ['vw_booking_baggage'],
+                'Fleet & airports': ['vw_airport_traffic']}
+    for category, names in expected.items():
+        assert [v['name'] for v in select_views(category)] == names
+    assert [v['name'] for v in select_views(search='V7')] == ['vw_airport_traffic']
+    assert [v['name'] for v in select_views(search='vw_booking_manifest')] == ['vw_booking_manifest']
+    assert len(select_views(search='SQL view')) == 7
+    assert not select_views('Revenue','occupancy')
 
 
 def edit(conn, name, key, **changes):
@@ -236,7 +249,9 @@ def test_install_views_repeatable_and_missing_only_affects_views(database,app):
     client = app.test_client()
     for path in ('/','/reports/J4','/dba/Airline'):
         assert client.get(path).status_code == 200
-    assert b'Install the management views' in client.get('/views').data
+    assert client.get('/views').status_code == 302
+    assert client.get('/views').location == '/reports'
+    assert b'Flight operations' in client.get('/reports',query_string={'category':'Flights'}).data
     assert b'install-views' in client.get('/views/vw_flight_operations').data
     assert not query(database,"SELECT TABLE_NAME FROM information_schema.VIEWS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='vw_flight_operations'")
     result = app.test_cli_runner().invoke(args=['install-views'])
@@ -294,3 +309,34 @@ def test_expired_row_token_rejects_change(database,monkeypatch):
     with pytest.raises(ValueError,match='expired'):
         mutate(database,spec,'1','update',token,{**form_values(old),'airline_name':'Expired change'})
     assert get_record(database,spec,'1') == old
+
+
+@pytest.mark.integration
+def test_views_are_integrated_with_business_reports(database,app):
+    from html import unescape
+    from airline.catalogue import REPORTS
+    from urllib.parse import urlencode
+    client = app.test_client()
+    response = client.get('/reports')
+    links = re.findall(r'class="report-card" href="([^"]+)"',response.text)
+    assert len(links) == 61
+    assert {f'/reports/{name}' for name in REPORTS} <= set(links)
+    assert {f'/views/{name}' for name in VIEWS} <= set(links)
+    assert b'>SQL views</span>' not in response.data
+    assert b'54 reports' in response.data and b'7 views' in response.data
+    for name,view in VIEWS.items():
+        response = client.get('/reports',query_string={'category':view['category']})
+        assert f'/views/{name}' in response.text
+        for other in VIEWS.values():
+            assert (f'/views/{other["name"]}' in response.text) == (other['category'] == view['category'])
+        detail = client.get('/views/'+name)
+        assert f'← {view["category"]} reports' in unescape(detail.text)
+        category_url = '/reports?' + urlencode({'category':view['category']})
+        assert f'class="nav-item active" href="{category_url}"' in detail.text
+    result = client.get('/reports',query_string={'q':'V1','category':'Flights'})
+    assert '/views/vw_flight_operations' in result.text
+    assert '/views/vw_flight_occupancy' not in result.text
+    assert b'No reports found' not in result.data
+    result = client.get('/reports',query_string={'q':'this-will-not-match-anything'})
+    assert b'No reports found' in result.data
+    assert client.get('/views').location == '/reports'

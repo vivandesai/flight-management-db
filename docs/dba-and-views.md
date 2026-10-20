@@ -50,7 +50,9 @@ View DDL is not wrapped in a rollback promise: MySQL commits DDL separately. If 
 | `vw_booking_baggage` | Bag count and total weight per booking, including zero bags; A17 |
 | `vw_airport_traffic` | Independent arrival/departure counts including unused airports; complements A10/A22 |
 
-Open **SQL views** to inspect live SELECT results and expand each definition. These seven screens are separate from the unchanged 54-report catalogue. They include stored historical and cancelled flights; totals do not claim to represent only future or active service. Independent aggregates avoid multiplying revenue when airlines have multiple aircraft or bookings have multiple bags. View results reflect edits and deletions immediately after commit. Fare amounts have no invented currency metadata.
+Find views in the same category cards and search as the original reports: **Flights** contains flight operations and occupancy, **Fleet & airports** contains airport traffic, **Passengers** contains passenger activity, **Bookings** contains the manifest, **Baggage** contains booking baggage, and **Revenue** contains airline performance. **All reports** includes all 61 entries (54 original reports and seven views). Search by a view's title, V1–V7 ID, database name or `SQL view`. View details highlight the matching sidebar category and link back to it. Old `/views` bookmarks redirect to All reports; direct view URLs remain valid. There is no separate SQL views sidebar section.
+
+Open a view to inspect live SELECT results and expand its definition. The views include stored historical and cancelled flights; totals do not claim to represent only future or active service. Independent aggregates avoid multiplying revenue when airlines have multiple aircraft or bookings have multiple bags. View results reflect edits and deletions immediately after commit. Fare amounts have no invented currency metadata.
 
 ## Presentation walkthrough
 

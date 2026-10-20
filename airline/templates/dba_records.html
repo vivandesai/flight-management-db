@@ -1,6 +1,6 @@
 {% extends 'base.html' %}{% from 'icons.html' import icon %}
 {% block content %}
-<div class="page-heading"><div><p class="eyebrow">DATABASE ADMINISTRATOR</p><h1>A closer look. Full control.</h1><p>Edit selected details and delete individual records. Relationships and database rules stay protected.</p></div><a class="btn btn-outline-primary" href="{{ url_for('admin.view_list') }}">{{ icon('reports') }} Explore 7 SQL views</a></div>
+<div class="page-heading"><div><p class="eyebrow">DATABASE ADMINISTRATOR</p><h1>A closer look. Full control.</h1><p>Edit selected details and delete individual records. Relationships and database rules stay protected.</p></div><a class="btn btn-outline-primary" href="{{ url_for('report_list') }}">{{ icon('reports') }} Explore reports</a></div>
 <nav class="entity-tabs" aria-label="Editable tables">{% for name in entities %}<a class="{{ 'selected' if name == entity.name }}" href="{{ url_for('admin.records', entity=name) }}">{{ name|heading }}</a>{% endfor %}</nav>
 <form class="report-search" method="get"><label class="visually-hidden" for="q">Search {{ entity.name|lower }} records</label><input class="form-control" id="q" name="q" value="{{ search }}" placeholder="Search {{ entity.name|lower }} details or IDs" maxlength="200"><button class="btn btn-primary">{{ icon('search') }} Search</button></form>
 <section class="panel"><div class="panel-heading"><div><p class="eyebrow">ENTITY RECORDS</p><h2>{{ entity.name }}</h2></div><span class="count-badge">{{ total }} matching records</span></div>

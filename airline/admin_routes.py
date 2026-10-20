@@ -80,9 +80,8 @@ def installed_views(conn):
 
 @admin.get("/views")
 def view_list():
-    with connection() as conn:
-        installed = installed_views(conn)
-    return render_template("views.html", title="SQL views", views=VIEWS, installed=installed)
+    # Preserve existing bookmarks while using the shared business report catalogue.
+    return redirect(url_for("report_list"))
 
 
 @admin.get("/views/<name>")

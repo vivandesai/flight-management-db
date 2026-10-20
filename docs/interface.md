@@ -75,11 +75,11 @@ Open **http://127.0.0.1:5000**. Waitress serves the app on localhost only. To us
 
 - **Overview:** original database counts, total booking revenue, flight schedule, occupancy and most-booked flights.
 - **Flights, Fleet & airports, Passengers, Bookings, Baggage, Revenue:** reports grouped by the business question they answer.
-- **All 54 reports:** search by title, description, query ID or SQL technique. Similar queries remain separately accessible.
+- **All reports:** search all 54 original reports and seven views by title, description, query/view ID or SQL technique. Similar queries remain separately accessible.
 - **Management actions:** registration, booking with optional baggage, transfer with actual baggage preservation, baggage registration, contact updates, status updates, flight cancellation, scheduling and airline onboarding.
 - **Browse records:** all seven entities and three audit tables, read-only.
 - **DBA panel:** search and edit selected fields across the seven entities, plus confirmed individual deletion when dependencies permit it. IDs and relationships stay read-only.
-- **SQL views:** seven separately installed MySQL views with live results and source definitions; these do not replace the 54 original reports.
+- **Integrated views:** seven installed MySQL views appear in the same report grid and search as their business categories. They keep live results and source definitions without a separate sidebar section. They do not replace any original report.
 - **Database demos:** original transactions plus reversible trigger demonstrations.
 
 Reports needing inputs use dropdowns populated from MySQL. Dates are explicit selections, not rewritten sample values. The supplied route-search default of 1 October 2026 has no matching seed flight; use **Mumbai → Delhi, 5 October 2026** to demonstrate an existing match. Zero-result reports are expected for the initial sample data, including almost-full flights.

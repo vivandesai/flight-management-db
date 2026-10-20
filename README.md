@@ -152,7 +152,7 @@ The built-in web portal runs locally on Flask & Waitress:
 - **Interactive Transaction & Trigger Demos**: Visual execution displaying query output, affected rows, and rollback behavior.
 - **Database Logs**: Live inspection of `flight_status_log`, `booking_creation_log`, and `booking_cancellation_log`.
 - **DBA Panel**: Search all seven entities, edit selected details, and preview individual deletions with dependency blocking. IDs and relationships remain protected; audit tables stay read-only.
-- **Seven SQL Views**: Flight operations, occupancy, airline performance, passenger activity, booking manifest, booking baggage and airport traffic, with live results and visible CREATE VIEW definitions.
+- **Seven SQL Views**: Integrated into Flights, Fleet & airports, Passengers, Bookings, Baggage and Revenue alongside the original queries, with live results and visible CREATE VIEW definitions. All reports searches all 61 entries (54 original reports and seven views).
 
 The DBA panel remains a local, no-login project screen. New parameterized DBA statements and seven view definitions live in separate scripts; all eight original SQL files remain unchanged. See the [DBA and views guide](docs/dba-and-views.md).
 
@@ -308,6 +308,7 @@ To run automated checks against the query catalogue and test suite:
 
 - **[Setup & Presentation Walkthrough](docs/interface.md)**: Detailed step-by-step instructions for viva/presentation prep and user workflows.
 - **[DBA Panel & Seven SQL Views](docs/dba-and-views.md)**: Editable fields, deletion safeguards, view installation and presentation scenarios.
+- **[Free Hosting Options](docs/hosting-options.md)**: Flask/MySQL hosting recommendations and project-specific deployment requirements.
 - **[Query Coverage Matrix](docs/query-coverage.md)**: Line-by-line index mapping each SQL query to the interface screen.
 - **[Relational Schema Specification](docs/relational_schema.md)**: Mathematical schema notation and foreign key references.
 - **[Verification Guide](docs/verification.md)**: Operational verification steps and checklist.

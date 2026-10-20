@@ -1,5 +1,0 @@
-{% extends 'base.html' %}{% block content %}
-<div class="page-heading"><div><p class="eyebrow">SEVEN DATABASE PERSPECTIVES</p><h1>One database. Clearer answers.</h1><p>Live MySQL views bring related records together. Historical and cancelled flights remain included; activity totals count all stored records.</p></div><span class="count-badge">7 SQL views</span></div>
-{% if installed|length < 7 %}{% include 'view_setup.html' %}{% endif %}
-<div class="report-grid">{% for name,view in views.items() %}<a class="report-card" href="{{ url_for('admin.view_detail',name=name) }}"><div class="report-card-top"><span class="tag">SQL VIEW</span><span class="report-id">V{{ loop.index }}</span></div><h2>{{ view.title }}</h2><p>{{ view.description }}</p><div class="report-card-bottom"><small>{{ 'Ready to explore' if name in installed else 'Installation needed' }}</small><span>↗</span></div></a>{% endfor %}</div>
-{% endblock %}

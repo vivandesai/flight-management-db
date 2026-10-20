@@ -11,6 +11,7 @@ import mysql.connector
 from .catalogue import ROOT, REPORTS, TRANSACTIONS, TRIGGERS, CATEGORIES
 from .db import connection, query, run_report, setup_status, init_db_command, install_views_command, TABLES
 from .admin_routes import admin
+from .view_catalogue import VIEWS, select_views
 from .demos import run_transaction, run_trigger, TRIGGER_LABELS
 from .workflows import ACTIONS, STATUSES, field, validate, execute_action
 
@@ -52,7 +53,8 @@ def create_app(test_config=None):
 
     @app.context_processor
     def shared():
-        return dict(categories=CATEGORIES, actions=ACTIONS, reports=REPORTS, statuses=STATUSES)
+        return dict(categories=CATEGORIES, actions=ACTIONS, reports=REPORTS, statuses=STATUSES,
+                    report_item_count=len(REPORTS) + len(VIEWS))
 
     @app.errorhandler(mysql.connector.Error)
     def database_error(exc):
@@ -107,6 +109,7 @@ def create_app(test_config=None):
         selected = [r for r in REPORTS.values() if (not category or r.category == category)
                     and (not search or search in f"{r.id} {r.title} {r.description} {r.technique}".lower())]
         return render_template("reports.html", title=category or "All reports", selected=selected,
+                               selected_views=select_views(category, search),
                                search=request.args.get("q", ""), category=category)
 
     @app.get("/reports/<report_id>")
